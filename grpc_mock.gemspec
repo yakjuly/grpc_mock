@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   # grpc 1.65 has bug on to_h
-  spec.add_dependency 'grpc', '1.63.0'
+  spec.add_dependency 'grpc', '>= 1.63.0', '< 2'
 
   spec.add_development_dependency 'bundler'
   # spec.add_development_dependency 'grpc-tools'
