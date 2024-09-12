@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  # grpc 1.65 has bug on to_h
+  # grpc 1.65 has bug on request#to_h
   spec.add_dependency 'grpc', '>= 1.63.0', '< 2'
 
   spec.add_development_dependency 'bundler'
