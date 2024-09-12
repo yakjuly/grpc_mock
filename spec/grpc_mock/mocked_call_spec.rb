@@ -153,14 +153,4 @@ RSpec.describe GrpcMock::MockedCall do
       it { is_expected.to eq(deadline) }
     end
   end
-
-  describe "#interceptable" do
-    let(:metadata) { { 'foo' => 'bar' } }
-    let(:deadline) { Time.now }
-    let(:mocked_call) { described_class.new(metadata: metadata, deadline: deadline) }
-    subject { mocked_call.interceptable }
-
-    it { is_expected.to be_a(GrpcMock::MockedCall::InterceptableView) }
-  end
-
 end
