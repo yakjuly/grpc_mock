@@ -17,14 +17,28 @@ module GrpcMock
         mock = GrpcMock.stub_registry.response_for_request(method, request)
         if mock
           call = GrpcMock::MockedCall.new(metadata: metadata)
+
+          active_call = new_active_call(method, *args)
+          interception_context = @interceptors.build_context
+          intercept_args = {
+            method: method,
+            request: request,
+            call: active_call.interceptable,
+            metadata: metadata
+          }
+
           if return_op
             operation = call.operation
             operation.define_singleton_method(:execute) do
-              mock.evaluate(request, call.single_req_view)
+              interception_context.intercept!(:request_response, intercept_args) do
+                mock.evaluate(request, call.single_req_view)
+              end
             end
             operation
           else
-            mock.evaluate(request, call.single_req_view)
+            interception_context.intercept!(:request_response, intercept_args) do
+              mock.evaluate(request, call.single_req_view)
+            end
           end
         elsif GrpcMock.config.allow_net_connect
           super

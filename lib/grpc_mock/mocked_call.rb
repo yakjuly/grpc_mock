@@ -5,6 +5,21 @@ require 'grpc_mock/mocked_operation'
 
 module GrpcMock
   class MockedCall
+
+    def self.view_class(*visible_methods)
+      Class.new do
+        extend ::Forwardable
+        def_delegators :@wrapped, *visible_methods
+
+        # @param wrapped [ActiveCall] the call whose methods are shielded
+        def initialize(wrapped)
+          @wrapped = wrapped
+        end
+      end
+    end
+
+    InterceptableView = view_class(:deadline)
+    
     attr_reader :deadline, :metadata
 
     def initialize(metadata: {}, deadline: nil)
@@ -22,6 +37,10 @@ module GrpcMock
 
     def operation
       GrpcMock::MockedOperation.new(self, metadata, deadline)
+    end
+
+    def interceptable
+      InterceptableView.new(self)
     end
 
     private
