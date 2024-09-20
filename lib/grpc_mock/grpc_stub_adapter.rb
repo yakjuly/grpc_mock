@@ -18,7 +18,7 @@ module GrpcMock
         if mock
           call = GrpcMock::MockedCall.new(metadata: metadata)
 
-          interception_context, intercept_args = interceptor_context_and_args(method, request, *args, metadata: metadata)
+          interception_context, intercept_args = interceptor_context_and_args(method, request, call, metadata: metadata)
 
           if return_op
             operation = call.operation
@@ -51,7 +51,7 @@ module GrpcMock
         if mock
           call = GrpcMock::MockedCall.new(metadata: metadata)
 
-          interception_context, intercept_args = interceptor_context_and_args(method, requests, *args, metadata: metadata)
+          interception_context, intercept_args = interceptor_context_and_args(method, requests, call, metadata: metadata)
 
           if return_op
             operation = call.operation
@@ -82,7 +82,7 @@ module GrpcMock
         if mock
           call = GrpcMock::MockedCall.new(metadata: metadata)
 
-          interception_context, intercept_args = interceptor_context_and_args(method, request, *args, metadata: metadata)
+          interception_context, intercept_args = interceptor_context_and_args(method, request, call, metadata: metadata)
 
           if return_op
             operation = call.operation
@@ -113,7 +113,7 @@ module GrpcMock
         mock = GrpcMock.stub_registry.response_for_request(method, r)
         if mock
 
-          interception_context, intercept_args = interceptor_context_and_args(method, requests, *args, metadata: metadata)
+          interception_context, intercept_args = interceptor_context_and_args(method, requests, call, metadata: metadata)
 
           if return_op
             operation = call.operation
@@ -135,19 +135,11 @@ module GrpcMock
         end
       end
 
-      def interceptor_context_and_args(method, request_or_requests, marshal, unmarshal, deadline: nil, return_op: false, parent: nil, credentials: nil, metadata: {})
-        active_call = new_active_call(method,
-          marshal,
-          unmarshal,
-          deadline: deadline,
-          parent: parent,
-          credentials: credentials
-        )
-
+      def interceptor_context_and_args(method, request_or_requests, call, metadata: {})
         interception_context = @interceptors.build_context
         intercept_args = {
           method: method,
-          call: active_call.interceptable,
+          call: call.interceptable,
           metadata: metadata
         }
 

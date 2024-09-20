@@ -23,10 +23,11 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   # grpc 1.65 has bug on request#to_h
-  spec.add_dependency 'grpc', '>= 1.63.0', '< 2'
+  # https://github.com/grpc/grpc/issues/37774
+  spec.add_dependency 'grpc', '>= 1.12.0', '<= 1.64.0'
 
   spec.add_development_dependency 'bundler'
-  # spec.add_development_dependency 'grpc-tools'
+  spec.add_development_dependency 'grpc-tools'
   spec.add_development_dependency 'pry-byebug'
   spec.add_development_dependency 'rake', '>= 12.3.3'
   spec.add_development_dependency 'rspec', '~> 3.0'
